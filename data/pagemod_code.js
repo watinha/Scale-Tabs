@@ -21,7 +21,7 @@
  *  @params tab_index: integer that identifies the tab representation selected.
  *  @params tab_li_element: li DOM element to be animated by the function
  */
-function select_tab(tab_index, tab_li_element){
+function select_tab(tab_title, tab_li_element){
   /*
    * Animating the function given the transitions propertie in the CSS of the 
    *  scale_tabs.html code
@@ -37,7 +37,7 @@ function select_tab(tab_index, tab_li_element){
   /*
    * Waiting for the animation effect and then sending the request for changing tabs
    */
-  setTimeout(function(){postMessage(tab_index)}, 100);
+  setTimeout(function(){postMessage(tab_title)}, 200);
 }
 
 /*
@@ -83,7 +83,7 @@ onMessage = function onMessage(message) {
    */
   li_element.onclick = function(event){
     var self = this;
-    select_tab(tab_index, self);
+    select_tab(title, self);
   };
 
   /*

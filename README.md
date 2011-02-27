@@ -1,4 +1,5 @@
---------- Scale tabs --------- 
+Scale tabs
+----------
 This package enhances the browser with the Scale tabs functionality that assists you in organizing and interacting the the multiple tabs you are using. 
 
 Scale tabs replaces the base BLANK tab that opens everytime you open a new tab with a tab selector mechanism. The mechanism lets you filter your tab accordingly to the keywords that compose it, and select the tab you wish for solely with keyboard interaction (using the arrow keys and the enter button). Each tab is visually represented by a screenshot of the current view of the tab, the title and a favicon icon.
