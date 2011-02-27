@@ -37,7 +37,7 @@ function select_tab(tab_title, tab_li_element){
   /*
    * Waiting for the animation effect and then sending the request for changing tabs
    */
-  setTimeout(function(){postMessage(tab_title)}, 200);
+  setTimeout(function(){postMessage(tab_title)}, 100);
 }
 
 /*

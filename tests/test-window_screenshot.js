@@ -1,6 +1,7 @@
 var window_screenshot = require("window_screenshot").get_Screenshot_window();
 var tabs = require("tabs");
 var data = require("self").data;
+var timer = require("timer");
 
 exports.tab_opening = function(test){
   tabs.open("http://www.google.com");
@@ -22,9 +23,9 @@ exports.tab_opening = function(test){
 exports.tab_changing = function(test){
   tabs.open("http://www.facebook.com");
   tabs.on("ready", function(tab){
-    window_screenshot.change_tab(1);
-    test.assertEqual(tabs.activeTab.title, "Google", "Testing if the tab change functionality is working.");
-    test.assertEqual(tabs.length, 4, "Testing if the last tab was closed.");
+    window_screenshot.change_tab("Google");
+    timer.setTimeout(function(){test.assertEqual(tabs.activeTab.title, "Google", "Testing if the tab change functionality is working.");}, 200);
+    timer.setTimeout(function(){test.assertEqual(tabs.length, 4, "Testing if the last tab was closed.");}, 200);
     test.done();
   });
   test.waitUntilDone(10000);
