@@ -1,0 +1,8 @@
+{
+    "description": "A simple tab organizer that allows you to controll your current open tabs.", 
+    "license": "MPL 1.1/GPL 2.0/LGPL 2.1", 
+    "author": "Willian Massami Watanabe (talk@watinha.com)", 
+    "version": "0.1", 
+    "fullName": "Scale tabs experiment", 
+    "name": "scale_tabs_experiment"
+}
