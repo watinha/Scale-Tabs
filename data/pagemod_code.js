@@ -34,10 +34,14 @@ function select_tab(tab_title, tab_li_element){
   screenshot.style.height = window.innerHeight;
   screenshot.style.zIndex = 99;
 
+  var data = {
+    type: "change",
+    content: tab_title
+  };
   /*
    * Waiting for the animation effect and then sending the request for changing tabs
    */
-  setTimeout(function(){postMessage(tab_title)}, 100);
+  setTimeout(function(){postMessage(data)}, 100);
 }
 
 /*
@@ -126,7 +130,7 @@ window.onload = function(){
   label_element.innerHTML = "Search field: ";
 
   input_element.type = "text";
-  input_element.size = 30;
+  input_element.size = 60;
   input_element.tabIndex = "1";
 
   /*
@@ -147,7 +151,10 @@ window.onload = function(){
     var number_per_row = Math.floor(window.innerWidth/(images[0].width + 30));  
     var tab_elements = document.querySelectorAll("ul#tabs_list > li");
     if(event.keyCode == 27){ //ESC
-      postMessage("close");
+      data = {
+        type: "close"
+      };
+      postMessage(data);
       return ;
     }
     if((event.keyCode == 39 || event.keyCode == 40|| event.keyCode == 38|| event.keyCode == 37) && selected == -1){
@@ -186,6 +193,17 @@ window.onload = function(){
       return ;
     } 
     if(event.keyCode == 13){ //ENTER
+      if (selected == -1){
+        var self = this;
+        var data = {
+          url: self.value
+        };
+        if (this.value.split(" ").length == 1)
+          data.type = "open";
+        else
+          data.type = "search";
+        postMessage(data);
+      }
       var self = tab_elements[selected];
       /*
        * Generating a click event to call for the select_tab function implicitly
@@ -200,7 +218,14 @@ window.onload = function(){
      *  filtering mode, which means it will present only the tabs that have a title
      *  that matches the input.value.
      */
-    var terms_filter = new RegExp(this.value , "i");
+
+    // regularizing the expression lookup in the string 
+    var select_words = this.value.split(" ");
+    var words_expression = ""; //  "google(.)*yahoo(.)*weather"
+    for (var count_words in select_words)
+      words_expression += select_words[count_words] + "(.)*";
+
+    var terms_filter = new RegExp(words_expression , "i");
     var cont_selected_tabs = 0;
     for(var cont_tabs = 0; cont_tabs < tab_elements.length; cont_tabs++){
       tab_elements[cont_tabs].classList.remove("only");   
@@ -217,6 +242,8 @@ window.onload = function(){
       tab_elements[selected].classList.add("selected");   
       tab_elements[selected].classList.add("only");   
     }
+    if (cont_selected_tabs == 0)
+      selected = -1;
   };
 
   /*
