@@ -41,14 +41,29 @@ function select_tab(tab_title, tab_li_element){
   /*
    * Waiting for the animation effect and then sending the request for changing tabs
    */
-  setTimeout(function(){postMessage(data)}, 100);
+  setTimeout(function(){self.postMessage(data)}, 100);
 }
 
 /*
  * Generating the tab data presentation DOM elements, to be included 
  *  in the scale_tabs.html page.
  */
-onMessage = function onMessage(message) {
+var input_filter;
+self.on("message", function (message) {
+  if (message.type_message != "screenshot"){
+    /*
+     * Generating a keypress event for the passed event from the urlbar
+     */
+    if((message.keyCode == 39 || message.keyCode == 40|| message.keyCode == 38|| message.keyCode == 37)){
+      return ;
+    }
+    var evt = document.createEvent("KeyboardEvent");
+    evt.initKeyEvent("keyup", true, true, window, false, false, false, false, message.keyCode, null);
+    evt.keyCode = message.keyCode;
+    input_filter.value = message.textValue;
+    input_filter.dispatchEvent(evt);
+    return ;
+  }
   /*
    * Catching the parameters separated by ,
    */
@@ -86,8 +101,8 @@ onMessage = function onMessage(message) {
    * Adding the base behaviour for changing tabs given a onclick event
    */
   li_element.onclick = function(event){
-    var self = this;
-    select_tab(title, self);
+    var self_li = this;
+    select_tab(title, self_li);
   };
 
   /*
@@ -114,7 +129,7 @@ onMessage = function onMessage(message) {
   li_element.appendChild(screenshot_image);
   li_element.appendChild(span_element);
   document.getElementById("tabs_list").appendChild(li_element);
-};
+});
 
 window.onload = function(){
   
@@ -130,8 +145,10 @@ window.onload = function(){
   label_element.innerHTML = "Search field: ";
 
   input_element.type = "text";
+  input_element.id = "filter_input";
   input_element.size = 60;
   input_element.tabIndex = "1";
+  input_filter = input_element;
 
   /*
    * Calculating the selection position for the keyboard selection functionality
@@ -154,7 +171,7 @@ window.onload = function(){
       data = {
         type: "close"
       };
-      postMessage(data);
+      self.postMessage(data);
       return ;
     }
     if((event.keyCode == 39 || event.keyCode == 40|| event.keyCode == 38|| event.keyCode == 37) && selected == -1){
@@ -194,23 +211,23 @@ window.onload = function(){
     } 
     if(event.keyCode == 13){ //ENTER
       if (selected == -1){
-        var self = this;
+        var self_input = this;
         var data = {
-          url: self.value
+          url: self_input.value
         };
         if (this.value.split(" ").length == 1)
           data.type = "open";
         else
           data.type = "search";
-        postMessage(data);
+        self.postMessage(data);
       }
-      var self = tab_elements[selected];
+      var self_tab = tab_elements[selected];
       /*
        * Generating a click event to call for the select_tab function implicitly
        */
       var evt = document.createEvent("MouseEvents");
       evt.initMouseEvent("click", true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
-      self.dispatchEvent(evt);
+      self_tab.dispatchEvent(evt);
       return ;
     }
     /*
@@ -252,11 +269,6 @@ window.onload = function(){
   filter_div.appendChild(label_element);
   filter_div.appendChild(input_element);
   document.body.appendChild(filter_div);
-
-  /*
-   * Setting the input_element of the filtering functionality to focus.
-   */
-  input_element.focus();
 
   /*
    * Next few lines generate and include the author div, containing 
