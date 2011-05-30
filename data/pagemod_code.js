@@ -1,29 +1,29 @@
 /* ***************************************************
- * 
+ *
  * contentScript name: pagemod_code.js
  * author: Willian Massami Watanabe (talk@watinha.com)
- * last changed: 10/02/2011 
- * 
+ * last changed: 10/02/2011
+ *
  * **************************************************/
 
 /*
  * This content script is responsible for:
  *  1. Generating the base DOM structure for the tabs informations.
- *  2. Adding the behaviour that will send task request to the chrome 
+ *  2. Adding the behaviour that will send task request to the chrome
  *      privileged page-mod code in the main module, via event handlers.
  *  3. The event handlers include the mouse click events and the keyboard
  *      events for filtering the tabs and selecting them via keypresses
  */
 
 /*
- * function select_tab function is responsible for sending the task request for 
+ * function select_tab function is responsible for sending the task request for
  *  changing the tab to the chrome privileged page-mod code in the main module.
  *  @params tab_index: integer that identifies the tab representation selected.
  *  @params tab_li_element: li DOM element to be animated by the function
  */
 function select_tab(tab_title, tab_li_element){
   /*
-   * Animating the function given the transitions propertie in the CSS of the 
+   * Animating the function given the transitions propertie in the CSS of the
    *  scale_tabs.html code
    */
   var screenshot = tab_li_element.getElementsByTagName("img")[0];
@@ -45,7 +45,7 @@ function select_tab(tab_title, tab_li_element){
 }
 
 /*
- * Generating the tab data presentation DOM elements, to be included 
+ * Generating the tab data presentation DOM elements, to be included
  *  in the scale_tabs.html page.
  */
 var input_filter;
@@ -106,7 +106,7 @@ self.on("message", function (message) {
   };
 
   /*
-   * Generating the span element that will hold the title and favicon 
+   * Generating the span element that will hold the title and favicon
    *  tab data.
    */
   var span_element = document.createElement("span");
@@ -132,7 +132,7 @@ self.on("message", function (message) {
 });
 
 window.onload = function(){
-  
+
   /*
    * Adding the filter functionality as an input field
    */
@@ -155,7 +155,7 @@ window.onload = function(){
    */
   var selected = -1;
   input_element.onkeyup = function(event){
-    /* 
+    /*
       Key codes for the keys:
       27 -> ESC: closes the scale_tabs.html tab and returns for the last active tab.
       40 -> down arrow: moves the selection cursor down in the matrix representation.
@@ -165,7 +165,7 @@ window.onload = function(){
       13 -> enter: selects and changes the active tab in the browser.
     */
     var images = document.querySelectorAll("ul > li > img");
-    var number_per_row = Math.floor(window.innerWidth/(images[0].width + 30));  
+    var number_per_row = Math.floor(window.innerWidth/(images[0].width + 30));
     var tab_elements = document.querySelectorAll("ul#tabs_list > li");
     if(event.keyCode == 27){ //ESC
       data = {
@@ -176,21 +176,21 @@ window.onload = function(){
     }
     if((event.keyCode == 39 || event.keyCode == 40|| event.keyCode == 38|| event.keyCode == 37) && selected == -1){
       selected = 0;
-      tab_elements[selected].classList.add("selected"); 
+      tab_elements[selected].classList.add("selected");
       return ;
     }
     if(event.keyCode == 39){ //RIGHT ARROW
       previous_selected = selected;
       selected = (++selected==tab_elements.length?0:selected);
       tab_elements[previous_selected].classList.remove("selected");
-      tab_elements[selected].classList.add("selected"); 
+      tab_elements[selected].classList.add("selected");
       return ;
     }
     if(event.keyCode == 37){ //LEFT ARROW
       previous_selected = selected;
       selected = (--selected<0?(tab_elements.length-1):selected);
       tab_elements[previous_selected].classList.remove("selected");
-      tab_elements[selected].classList.add("selected"); 
+      tab_elements[selected].classList.add("selected");
       return ;
     }
     if(event.keyCode == 40){ //DOWN ARROW
@@ -198,7 +198,7 @@ window.onload = function(){
       selected = selected + number_per_row;
       selected = (selected>=tab_elements.length?(tab_elements.length-1):selected);
       tab_elements[previous_selected].classList.remove("selected");
-      tab_elements[selected].classList.add("selected"); 
+      tab_elements[selected].classList.add("selected");
       return ;
     }
     if(event.keyCode == 38){ //UP ARROW
@@ -206,16 +206,16 @@ window.onload = function(){
       selected = selected - number_per_row;
       selected = (selected<0?0:selected);
       tab_elements[previous_selected].classList.remove("selected");
-      tab_elements[selected].classList.add("selected"); 
+      tab_elements[selected].classList.add("selected");
       return ;
-    } 
+    }
     if(event.keyCode == 13){ //ENTER
       if (selected == -1){
         var self_input = this;
         var data = {
           url: self_input.value
         };
-        if (this.value.split(" ").length == 1)
+        if (this.value.split(".").length > 1)
           data.type = "open";
         else
           data.type = "search";
@@ -231,12 +231,12 @@ window.onload = function(){
       return ;
     }
     /*
-     * If the key pressed is not a arrow, ESC or enter, the input will get in the 
+     * If the key pressed is not a arrow, ESC or enter, the input will get in the
      *  filtering mode, which means it will present only the tabs that have a title
      *  that matches the input.value.
      */
 
-    // regularizing the expression lookup in the string 
+    // regularizing the expression lookup in the string
     var select_words = this.value.split(" ");
     var words_expression = ""; //  "google(.)*yahoo(.)*weather"
     for (var count_words in select_words)
@@ -245,19 +245,19 @@ window.onload = function(){
     var terms_filter = new RegExp(words_expression , "i");
     var cont_selected_tabs = 0;
     for(var cont_tabs = 0; cont_tabs < tab_elements.length; cont_tabs++){
-      tab_elements[cont_tabs].classList.remove("only");   
-      tab_elements[cont_tabs].classList.remove("selected");   
+      tab_elements[cont_tabs].classList.remove("only");
+      tab_elements[cont_tabs].classList.remove("selected");
       if(tab_elements[cont_tabs].querySelectorAll("span")[0].childNodes[1].nodeValue.search(terms_filter) > -1){
-        tab_elements[cont_tabs].classList.remove("filtered"); 
+        tab_elements[cont_tabs].classList.remove("filtered");
         cont_selected_tabs++;
         selected = cont_tabs;
       }else{
         tab_elements[cont_tabs].classList.add("filtered");
-      }    
+      }
     }
     if (cont_selected_tabs == 1){
-      tab_elements[selected].classList.add("selected");   
-      tab_elements[selected].classList.add("only");   
+      tab_elements[selected].classList.add("selected");
+      tab_elements[selected].classList.add("only");
     }
     if (cont_selected_tabs == 0)
       selected = -1;
@@ -271,13 +271,13 @@ window.onload = function(){
   document.body.appendChild(filter_div);
 
   /*
-   * Next few lines generate and include the author div, containing 
+   * Next few lines generate and include the author div, containing
    *  information about the author.
    */
   var author_div = document.createElement("div");
   var watinha_link = document.createElement("a");
 
-  author_div.className = "author"; 
+  author_div.className = "author";
 
   watinha_link.innerHTML = "@watinha";
   watinha_link.title = "watinha's link";
