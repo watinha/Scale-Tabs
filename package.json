@@ -1,0 +1,15 @@
+{
+  "title": "Scale-tabs",
+  "name": "scale-tabs",
+  "version": "0.0.1",
+  "description": "Scale-tabs will provide you with assistance while searching for new content or changing tabs.",
+  "main": "index.js",
+  "author": "Willian Massami Watanabe",
+  "engines": {
+    "firefox": ">=38.0a1"
+  },
+  "license": "MIT",
+  "keywords": [
+    "jetpack"
+  ]
+}
