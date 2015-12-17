@@ -12,7 +12,7 @@ exports["test App.init should set tab listener"] = function (assert) {
             }
         },
         on_called = "", on_callback = "", bind_called = "",
-        app_instance = new App(windows_mock);
+        app_instance = new App({browserWindows: windows_mock});
 
     app_instance._set_urlbar_listener.bind = function () {
         bind_called = "ok";
@@ -42,7 +42,7 @@ exports["test App._set_urlbar_listener should get gURLBar"] =
             return xul_browser_window_mock;
         },
         listener_set = "",
-        app_instance = new App(windows_mock, viewFor);
+        app_instance = new App({ browserWindows: windows_mock, viewFor: viewFor });
 
     app_instance._show_panel = function () {}
     app_instance._show_panel.bind = function (scope){
@@ -63,8 +63,11 @@ exports["test _show_panel open a panel"] = function (assert) {
             }
         },
         showed = "false",
-        app_instance = new App(
-            windows_mock, view_for_mock, panel_mock);
+        app_instance = new App({
+            browserWindows: windows_mock,
+            viewFor: view_for_mock,
+            panel: panel_mock
+        });
     app_instance._show_panel();
     assert.equal(showed, "ok");
 };

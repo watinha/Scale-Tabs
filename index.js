@@ -11,4 +11,8 @@ panel = Panel({
     contentURL: "http://wwatana.be"
 });
 
-(new App(browserWindows, viewFor, panel)).init();
+(new App({
+    browserWindows: browserWindows,
+    viewFor: viewFor,
+    panel: panel
+})).init();
