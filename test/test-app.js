@@ -4,7 +4,8 @@ exports["test app module exists"] = function (assert) {
     assert.pass("app exists");
 };
 
-exports["test App.init should set tab listener"] = function (assert) {
+exports["test App.init should set window listener"] =
+        function (assert) {
     var windows_mock = {
             on: function (ev_type, callback) {
                 on_called = ev_type;
@@ -14,6 +15,7 @@ exports["test App.init should set tab listener"] = function (assert) {
         on_called = "", on_callback = "", bind_called = "",
         app_instance = new App({browserWindows: windows_mock});
 
+    app_instance._set_urlbar_listener = function () {};
     app_instance._set_urlbar_listener.bind = function () {
         bind_called = "ok";
         assert.equal(arguments[0], app_instance);
@@ -25,6 +27,25 @@ exports["test App.init should set tab listener"] = function (assert) {
     assert.equal(bind_called, "ok");
     assert.equal(on_callback, "ok bind");
 };
+
+exports["test App.init should set listener on current window"] =
+        function (assert) {
+    var windows_mock = {
+            activeWindow: {},
+            on: function () {}
+        },
+        listener_set = "",
+        app_instance = new App({browserWindows: windows_mock});
+
+    app_instance._set_urlbar_listener = function (w) {
+        listener_set = "ok";
+        assert.strictEqual(w, windows_mock.activeWindow);
+    };
+
+    app_instance.init();
+    assert.equal(listener_set, "ok");
+};
+
 
 exports["test App._set_urlbar_listener should get gURLBar"] =
         function (assert) {
