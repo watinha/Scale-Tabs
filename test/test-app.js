@@ -47,32 +47,47 @@ exports["test App.init should set listener on current window"] =
 };
 
 
-exports["test App._set_urlbar_listener should get gURLBar"] =
+exports["test App._set_urlbar_listener should " +
+        "set focus and blur listeners on gURLBar"] =
         function (assert) {
     var windows_mock = {},
         browser_window_mock = {},
         xul_browser_window_mock = {
             addEventListener: function (type, callback) {
-                listener_set = "ok";
+                listener_set++;
                 assert.equal(type, "focus");
-                assert.equal(callback, "callback ok");
+                assert.equal(callback, "focus ok");
+
+                this.addEventListener = function (type, callback) {
+                    listener_set++;
+                    assert.equal(type, "blur");
+                    assert.equal(callback, "blur ok");
+                }
             }
         },
         viewFor = function (browser_window) {
             assert.strictEqual(browser_window, browser_window_mock);
             return xul_browser_window_mock;
         },
-        listener_set = "",
-        app_instance = new App({ browserWindows: windows_mock, viewFor: viewFor });
+        listener_set = 0,
+        app_instance = new App({
+            browserWindows: windows_mock,
+            viewFor: viewFor
+        });
 
     app_instance._show_panel = function () {}
     app_instance._show_panel.bind = function (scope){
         assert.equal(scope, app_instance);
-        return "callback ok";
-    }
+        return "focus ok";
+    };
+    app_instance._hide_panel = function () {}
+    app_instance._hide_panel.bind = function (scope){
+        assert.equal(scope, app_instance);
+        return "blur ok";
+    };
 
     app_instance._set_urlbar_listener(browser_window_mock);
-    assert.equal(listener_set, "ok");
+    assert.equal(listener_set, 2);
 };
 
 exports["test _show_panel open a panel"] = function (assert) {
@@ -91,6 +106,24 @@ exports["test _show_panel open a panel"] = function (assert) {
         });
     app_instance._show_panel();
     assert.equal(showed, "ok");
+};
+
+exports["test _hide_panel should hide a panel"] = function (assert) {
+    var windows_mock = {},
+        view_for_mock = function () {},
+        panel_mock = {
+            hide: function () {
+                hiden = "ok";
+            }
+        },
+        hiden = "false",
+        app_instance = new App({
+            browserWindows: windows_mock,
+            viewFor: view_for_mock,
+            panel: panel_mock
+        });
+    app_instance._hide_panel();
+    assert.equal(hiden, "ok");
 };
 
 require("sdk/test").run(exports);
