@@ -53,15 +53,17 @@ exports["test App._set_urlbar_listener should " +
     var windows_mock = {},
         browser_window_mock = {},
         xul_browser_window_mock = {
-            addEventListener: function (type, callback) {
-                listener_set++;
-                assert.equal(type, "focus");
-                assert.equal(callback, "focus ok");
-
-                this.addEventListener = function (type, callback) {
+            gURLBar: {
+                addEventListener: function (type, callback) {
                     listener_set++;
-                    assert.equal(type, "blur");
-                    assert.equal(callback, "blur ok");
+                    assert.equal(type, "focus");
+                    assert.equal(callback, "focus ok");
+
+                    this.addEventListener = function (type, callback) {
+                        listener_set++;
+                        assert.equal(type, "blur");
+                        assert.equal(callback, "blur ok");
+                    }
                 }
             }
         },

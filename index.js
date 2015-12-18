@@ -10,7 +10,8 @@ panel = new ScaleTabsPanel({
     windows: browserWindows,
     viewFor: viewFor,
     panel: Panel({
-        contentURL: "http://wwatana.be"
+        contentURL: "http://wwatana.be",
+        focus: false
     })
 });
 
