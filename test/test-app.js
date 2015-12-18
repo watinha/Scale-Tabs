@@ -92,22 +92,87 @@ exports["test App._set_urlbar_listener should " +
     assert.equal(listener_set, 2);
 };
 
-exports["test _show_panel open a panel"] = function (assert) {
+exports["test _show_panel should open a panel"] = function (assert) {
     var windows_mock = {},
         view_for_mock = function () {},
+        tabs_stub = [{
+            getThumbnail: function () { return "image1"; }
+        }],
         panel_mock = {
             show: function () {
                 showed = "ok";
-            }
+            },
+            send_tabs: function () {}
         },
         showed = "false",
         app_instance = new App({
             browserWindows: windows_mock,
             viewFor: view_for_mock,
-            panel: panel_mock
+            panel: panel_mock,
+            tabs: tabs_stub
         });
     app_instance._show_panel();
     assert.equal(showed, "ok");
+};
+
+exports["test _show_panel should send tabs thumbnails to panel"] =
+        function (assert) {
+    var windows_mock = {},
+        view_for_mock = function () {},
+        tabs_stub = [{
+            getThumbnail: function () { return "image1"; }
+        }],
+        panel_mock = {
+            show: function () {},
+            send_tabs: function (json) {
+                send_tabs_called = "ok";
+                assert.deepEqual(json, [{image:"image1"}]);
+            }
+        },
+        send_tabs_called = "",
+        app_instance = new App({
+            browserWindows: windows_mock,
+            viewFor: view_for_mock,
+            panel: panel_mock,
+            tabs: tabs_stub
+        });
+    app_instance._show_panel();
+    assert.equal(send_tabs_called, "ok");
+};
+
+exports["test _show_panel should send multiple tabs to panel"] =
+        function (assert) {
+    var windows_mock = {},
+        view_for_mock = function () {},
+        tabs_stub = [
+            { getThumbnail: function () { return "image1"; } },
+            { getThumbnail: function () { return "image2"; } },
+            { getThumbnail: function () { return "image3"; } },
+            { getThumbnail: function () { return "image4"; } },
+            { getThumbnail: function () { return "image5"; } }
+        ],
+        panel_mock = {
+            show: function () {},
+            send_tabs: function (json) {
+                send_tabs_called = "ok";
+                assert.deepEqual(json, [
+                    {image:"image1"},
+                    {image:"image2"},
+                    {image:"image3"},
+                    {image:"image4"},
+                    {image:"image5"}
+                ]);
+            }
+        },
+        send_tabs_called = "",
+        app_instance = new App({
+            browserWindows: windows_mock,
+            viewFor: view_for_mock,
+            panel: panel_mock,
+            tabs: tabs_stub
+        });
+    app_instance._show_panel();
+    assert.equal(send_tabs_called, "ok");
 };
 
 exports["test _hide_panel should hide a panel"] = function (assert) {
