@@ -1,12 +1,12 @@
 {
-  "title": "scale-tabs",
+  "title": "Scale-tabs",
   "name": "scale-tabs",
   "version": "0.0.1",
-  "description": "Helps users search for tabs, similarly and much simplier than panorama",
-  "main": "main.js",
+  "description": "Scale-tabs will provide you with assistance while searching for new content or changing tabs.",
+  "main": "index.js",
   "author": "Willian Massami Watanabe",
   "engines": {
-    "firefo": ">=38.0a1"
+    "firefox": ">=38.0a1"
   },
   "license": "MIT",
   "keywords": [
