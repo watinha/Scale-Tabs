@@ -33,4 +33,35 @@ exports["test panel html for receiving data and render images"] =
     tabs.activeTab.url = self.data.url("scale-tabs.html");
 };
 
+exports["test panel html should reset html content before rendering new tabs"] =
+        function (assert, done) {
+    var page_mod = PageMod({
+            include: self.data.url("scale-tabs.html"),
+            contentScriptFile: [
+                self.data.url("scale-tabs.js"),
+                self.data.url("test-helper-scale-tabs.js")
+            ],
+            onAttach: function (worker) {
+                worker.port.on("html", function (html) {
+                    assert.equal(html[0], "<img src=\"abobrinha1.png\">");
+                    worker.port.on("html", function (html) {
+                        assert.equal(html[0], "<img src=\"abobrinha1.png\">");
+                        assert.equal(html[1], "<img src=\"abobrinha2.png\">");
+                        assert.equal(html.length, 2);
+                        done();
+                    });
+                    worker.port.emit("tabs", [
+                        {image: "abobrinha1.png"},
+                        {image: "abobrinha2.png"}
+                    ]);
+                });
+                worker.port.emit("tabs", [
+                    {image: "abobrinha1.png"}
+                ]);
+            }
+        }),
+        message_received = "";
+    tabs.activeTab.url = self.data.url("scale-tabs.html");
+};
+
 require("sdk/test").run(exports);
