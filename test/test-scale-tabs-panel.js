@@ -48,11 +48,9 @@ exports["test scale-tabs-panel should implement hide method"] =
 
 exports["test scale-tabs-panel should send tabs to panel"] =
         function (assert) {
-    var panel_mock = {},
-        hide_called = "",
-        self_mock, emit_called = "",
+    var panel_mock = {}, hide_called = "", emit_called = "",
         scale_tabs_panel;
-    self_mock = {
+    panel_mock = {
         port: {
             emit: function (ev, data) {
                 emit_called = "ok";
@@ -62,8 +60,7 @@ exports["test scale-tabs-panel should send tabs to panel"] =
         }
     };
     scale_tabs_panel = new ScaleTabsPanel({
-        panel: panel_mock,
-        self: self_mock
+        panel: panel_mock
     });
     scale_tabs_panel.send_tabs([{ abobrinha: "legal" }]);
     assert.equal(emit_called, "ok");
