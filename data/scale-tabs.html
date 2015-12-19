@@ -14,6 +14,12 @@
                 display: inline-block;
                 margin: 5px 5px;
                 box-shadow: 3px 3px 3px #999;
+                animation-name: appear-tabs;
+                animation-duration: 0.3s;
+            }
+            @keyframes appear-tabs {
+                0% { transform: scale(0); opacity: 0; }
+                100% { transform: scale(1.0); opacity: 1;}
             }
         </style>
     </head>
