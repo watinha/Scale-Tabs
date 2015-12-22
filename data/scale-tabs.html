@@ -16,6 +16,10 @@
                 box-shadow: 3px 3px 3px #999;
                 animation-name: appear-tabs;
                 animation-duration: 0.3s;
+                transition: transform linear 0.2s;
+            }
+            body img.removido {
+                transform: scale(0);
             }
             @keyframes appear-tabs {
                 0% { transform: scale(0); opacity: 0; }
