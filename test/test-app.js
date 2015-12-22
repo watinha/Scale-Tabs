@@ -121,14 +121,18 @@ exports["test _show_panel should send title and thumbnails to panel"] =
         view_for_mock = function () {},
         tabs_stub = [{
             getThumbnail: function () { return "image1"; },
-            title: "Title 1"
+            title: "Title 1",
+            url: "abobrinha1.com"
         }],
         panel_mock = {
             show: function () {},
             send_tabs: function (json) {
                 send_tabs_called = "ok";
-                assert.deepEqual(json, [
-                        {image:"image1", title: "Title 1"}]);
+                assert.deepEqual(json, [{
+                    image:"image1",
+                    url: "abobrinha1.com",
+                    title: "Title 1"
+                }]);
             }
         },
         send_tabs_called = "",
@@ -149,18 +153,23 @@ exports["test _show_panel should send multiple tabs to panel"] =
         tabs_stub = [
             {
                 title: "Title 1",
+                url: "ab1.com",
                 getThumbnail: function () { return "image1"; }
             }, {
                 title: "Title 2",
+                url: "ab2.com",
                 getThumbnail: function () { return "image2"; }
             }, {
                 title: "Title 3",
+                url: "ab3.com",
                 getThumbnail: function () { return "image3"; }
             }, {
                 title: "Title 4",
+                url: "ab4.com",
                 getThumbnail: function () { return "image4"; }
             }, {
                 title: "Title 5",
+                url: "ab5.com",
                 getThumbnail: function () { return "image5"; }
             }
         ],
@@ -169,11 +178,11 @@ exports["test _show_panel should send multiple tabs to panel"] =
             send_tabs: function (json) {
                 send_tabs_called = "ok";
                 assert.deepEqual(json, [
-                    {title: "Title 1", image:"image1"},
-                    {title: "Title 2", image:"image2"},
-                    {title: "Title 3", image:"image3"},
-                    {title: "Title 4", image:"image4"},
-                    {title: "Title 5", image:"image5"}
+                    {title: "Title 1", url: "ab1.com", image:"image1"},
+                    {title: "Title 2", url: "ab2.com", image:"image2"},
+                    {title: "Title 3", url: "ab3.com", image:"image3"},
+                    {title: "Title 4", url: "ab4.com", image:"image4"},
+                    {title: "Title 5", url: "ab5.com", image:"image5"}
                 ]);
             }
         },
