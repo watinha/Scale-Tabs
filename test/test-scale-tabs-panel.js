@@ -66,4 +66,23 @@ exports["test scale-tabs-panel should send tabs to panel"] =
     assert.equal(emit_called, "ok");
 };
 
+exports["test panel should send search values to content script"] =
+        function (assert) {
+    var panel_mock, emit_called = "", scale_tabs_panel;
+    panel_mock = {
+        port: {
+            emit: function (type, data) {
+                assert.equal(type, "search");
+                assert.equal(data, "abobrinha");
+                emit_called = "ok";
+            }
+        }
+    };
+    scale_tabs_panel = new ScaleTabsPanel({
+        panel: panel_mock
+    });
+    scale_tabs_panel.send_search("abobrinha");
+    assert.equal(emit_called, "ok");
+};
+
 require("sdk/test").run(exports);
