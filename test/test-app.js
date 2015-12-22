@@ -115,18 +115,20 @@ exports["test _show_panel should open a panel"] = function (assert) {
     assert.equal(showed, "ok");
 };
 
-exports["test _show_panel should send tabs thumbnails to panel"] =
+exports["test _show_panel should send title and thumbnails to panel"] =
         function (assert) {
     var windows_mock = {},
         view_for_mock = function () {},
         tabs_stub = [{
-            getThumbnail: function () { return "image1"; }
+            getThumbnail: function () { return "image1"; },
+            title: "Title 1"
         }],
         panel_mock = {
             show: function () {},
             send_tabs: function (json) {
                 send_tabs_called = "ok";
-                assert.deepEqual(json, [{image:"image1"}]);
+                assert.deepEqual(json, [
+                        {image:"image1", title: "Title 1"}]);
             }
         },
         send_tabs_called = "",
@@ -145,22 +147,33 @@ exports["test _show_panel should send multiple tabs to panel"] =
     var windows_mock = {},
         view_for_mock = function () {},
         tabs_stub = [
-            { getThumbnail: function () { return "image1"; } },
-            { getThumbnail: function () { return "image2"; } },
-            { getThumbnail: function () { return "image3"; } },
-            { getThumbnail: function () { return "image4"; } },
-            { getThumbnail: function () { return "image5"; } }
+            {
+                title: "Title 1",
+                getThumbnail: function () { return "image1"; }
+            }, {
+                title: "Title 2",
+                getThumbnail: function () { return "image2"; }
+            }, {
+                title: "Title 3",
+                getThumbnail: function () { return "image3"; }
+            }, {
+                title: "Title 4",
+                getThumbnail: function () { return "image4"; }
+            }, {
+                title: "Title 5",
+                getThumbnail: function () { return "image5"; }
+            }
         ],
         panel_mock = {
             show: function () {},
             send_tabs: function (json) {
                 send_tabs_called = "ok";
                 assert.deepEqual(json, [
-                    {image:"image1"},
-                    {image:"image2"},
-                    {image:"image3"},
-                    {image:"image4"},
-                    {image:"image5"}
+                    {title: "Title 1", image:"image1"},
+                    {title: "Title 2", image:"image2"},
+                    {title: "Title 3", image:"image3"},
+                    {title: "Title 4", image:"image4"},
+                    {title: "Title 5", image:"image5"}
                 ]);
             }
         },
