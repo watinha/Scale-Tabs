@@ -13,11 +13,16 @@ exports["test panel html for receiving data and render images"] =
             ],
             onAttach: function (worker) {
                 worker.port.on("html", function (html) {
-                    assert.equal(html[0], "<img src=\"abobrinha1.png\">");
-                    assert.equal(html[1], "<img src=\"abobrinha2.png\">");
-                    assert.equal(html[2], "<img src=\"abobrinha3.png\">");
-                    assert.equal(html[3], "<img src=\"abobrinha4.png\">");
-                    assert.equal(html[4], "<img src=\"abobrinha5.png\">");
+                    assert.equal(
+                        html[0], "<img src=\"abobrinha1.png\">");
+                    assert.equal(
+                        html[1], "<img src=\"abobrinha2.png\">");
+                    assert.equal(
+                        html[2], "<img src=\"abobrinha3.png\">");
+                    assert.equal(
+                        html[3], "<img src=\"abobrinha4.png\">");
+                    assert.equal(
+                        html[4], "<img src=\"abobrinha5.png\">");
                     done();
                 });
                 worker.port.emit("tabs", [
@@ -43,10 +48,13 @@ exports["test panel html should reset html content before rendering new tabs"] =
             ],
             onAttach: function (worker) {
                 worker.port.on("html", function (html) {
-                    assert.equal(html[0], "<img src=\"abobrinha1.png\">");
+                    assert.equal(
+                        html[0], "<img src=\"abobrinha1.png\">");
                     worker.port.on("html", function (html) {
-                        assert.equal(html[0], "<img src=\"abobrinha1.png\">");
-                        assert.equal(html[1], "<img src=\"abobrinha2.png\">");
+                        assert.equal(
+                            html[0], "<img src=\"abobrinha1.png\">");
+                        assert.equal(
+                            html[1], "<img src=\"abobrinha2.png\">");
                         assert.equal(html.length, 2);
                         done();
                     });
