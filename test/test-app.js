@@ -48,7 +48,7 @@ exports["test App.init should set listener on current window"] =
 
 
 exports["test App._set_urlbar_listener should " +
-        "set focus and blur listeners on gURLBar"] =
+        "set focus, blur and keyup listeners on gURLBar"] =
         function (assert) {
     var windows_mock = {},
         browser_window_mock = {},
@@ -63,6 +63,12 @@ exports["test App._set_urlbar_listener should " +
                         listener_set++;
                         assert.equal(type, "blur");
                         assert.equal(callback, "blur ok");
+                        this.addEventListener =
+                                function (type, callback) {
+                            listener_set++;
+                            assert.equal(type, "keyup");
+                            assert.equal(callback, "keyup ok");
+                        }
                     }
                 }
             }
@@ -87,9 +93,16 @@ exports["test App._set_urlbar_listener should " +
         assert.equal(scope, app_instance);
         return "blur ok";
     };
+    app_instance._search = function () {}
+    app_instance._search.bind =
+            function (scope, gURLBar){
+        assert.equal(scope, app_instance);
+        assert.strictEqual(gURLBar, xul_browser_window_mock.gURLBar);
+        return "keyup ok";
+    };
 
     app_instance._set_urlbar_listener(browser_window_mock);
-    assert.equal(listener_set, 2);
+    assert.equal(listener_set, 3);
 };
 
 exports["test _show_panel should open a panel"] = function (assert) {
@@ -213,6 +226,27 @@ exports["test _hide_panel should hide a panel"] = function (assert) {
         });
     app_instance._hide_panel();
     assert.equal(hiden, "ok");
+};
+
+exports["test _search should send value to panel"] =
+        function (assert) {
+    var windows_mock = {},
+        view_for_mock = function () {},
+        gURLBar_mock = { value: "abobrinha" },
+        send_search_count = 0,
+        panel_mock = {
+            send_search: function (search) {
+                assert.equal(search, "abobrinha");
+                send_search_count++;
+            }
+        },
+        app_instance = new App({
+            browserWindows: windows_mock,
+            viewFor: view_for_mock,
+            panel: panel_mock
+        });
+    app_instance._search(gURLBar_mock);
+    assert.equal(send_search_count, 1);
 };
 
 require("sdk/test").run(exports);
