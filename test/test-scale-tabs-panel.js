@@ -18,7 +18,7 @@ exports["test scale-tabs-panel should implement show method and " +
     chrome_window_mock.innerWidth = 994;
     panel_mock.show = function (args) {
         show_called = "ok";
-        assert.equal(args.height, 400);
+        assert.equal(args.height, 300);
         assert.equal(args.width, 994);
         assert.equal(args.position.bottom, 0);
     };

@@ -6,7 +6,7 @@
         <style type="text/css" media="screen">
             body {
                 background: linear-gradient(to bottom, #eeeeee 0%,#cccccc 100%);
-                height: 400px;
+                height: 300px;
                 overflow: hidden;
                 text-align: center;
             }
@@ -15,11 +15,12 @@
                 margin: 5px 5px;
                 box-shadow: 3px 3px 3px #999;
                 animation-name: appear-tabs;
-                animation-duration: 0.3s;
-                transition: transform linear 0.2s;
+                animation-duration: 0.5s;
+                transition: all linear 0.2s;
             }
             body img.removido {
-                transform: scale(0);
+                opacity: 0.3;
+                transform: scale(0.9);
             }
             @keyframes appear-tabs {
                 0% { transform: scale(0); opacity: 0; }
