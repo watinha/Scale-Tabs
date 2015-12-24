@@ -18,12 +18,12 @@ panel = new ScaleTabsPanel({
     })
 });
 panel.isShowing = function () { return false; };
-panel.panel.on("hide", function () {
+panel._panel.on("hide", function () {
     panel.isShowing = function () {
         return false;
     };
 });
-panel.panel.on("show", function () {
+panel._panel.on("show", function () {
     panel.isShowing = function () {
         return true;
     };
