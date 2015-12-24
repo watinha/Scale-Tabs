@@ -85,4 +85,20 @@ exports["test panel should send search values to content script"] =
     assert.equal(emit_called, "ok");
 };
 
+exports["test isShowing should call isShowing in panel"] =
+        function (assert) {
+    var isShowing_call_count = 0,
+        panel_mock = {
+            isShowing: function () {
+                isShowing_call_count++;
+                return "ok isShowing called";
+            }
+        },
+        scale_tabs_panel = new ScaleTabsPanel({
+            panel: panel_mock
+        });
+    assert.equal(scale_tabs_panel.isShowing(), "ok isShowing called");
+    assert.equal(isShowing_call_count, 1);
+};
+
 require("sdk/test").run(exports);

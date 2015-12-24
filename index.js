@@ -17,6 +17,17 @@ panel = new ScaleTabsPanel({
         focus: false
     })
 });
+panel.isShowing = function () { return false; };
+panel.panel.on("hide", function () {
+    panel.isShowing = function () {
+        return false;
+    };
+});
+panel.panel.on("show", function () {
+    panel.isShowing = function () {
+        return true;
+    };
+});
 
 (new App({
     browserWindows: browserWindows,

@@ -235,6 +235,7 @@ exports["test _search should send value to panel"] =
         gURLBar_mock = { value: "abobrinha" },
         send_search_count = 0,
         panel_mock = {
+            isShowing: function () { return true; },
             send_search: function (search) {
                 assert.equal(search, "abobrinha");
                 send_search_count++;
@@ -247,6 +248,33 @@ exports["test _search should send value to panel"] =
         });
     app_instance._search(gURLBar_mock);
     assert.equal(send_search_count, 1);
+};
+
+exports["test _search should show panel if not previously shown"] =
+        function (assert) {
+    var windows_mock = {},
+        view_for_mock = function () {},
+        gURLBar_mock = { value: "abobrinha" },
+        send_search_count = 0,
+        panel_show_count = 0,
+        panel_mock = {
+            isShowing: function () { return false; },
+            send_search: function (search) {
+                assert.equal(search, "abobrinha");
+                send_search_count++;
+            }
+        },
+        app_instance = new App({
+            browserWindows: windows_mock,
+            viewFor: view_for_mock,
+            panel: panel_mock
+        });
+    app_instance._show_panel = function () {
+        panel_show_count++;
+    };
+    app_instance._search(gURLBar_mock);
+    assert.equal(send_search_count, 1);
+    assert.equal(panel_show_count, 1);
 };
 
 require("sdk/test").run(exports);
